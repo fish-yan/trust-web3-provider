@@ -299,6 +299,10 @@ export class EthereumProvider
     return this.#chainId;
   }
 
+  get chainId(): string {
+    return this.#chainId;
+  }
+
   public setConfig(config: IEthereumProviderConfig) {
     this.setChainId('0x' + parseInt(config.chainId || '1').toString(16));
     if (config.address) {
