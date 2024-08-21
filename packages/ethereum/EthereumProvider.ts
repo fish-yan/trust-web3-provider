@@ -30,6 +30,8 @@ export class EthereumProvider
 
   isOnto: boolean = true
 
+  isONTO: boolean = true
+
   isTrust: boolean = false;
 
   isTrustWallet: boolean = false;
@@ -291,6 +293,10 @@ export class EthereumProvider
     return this.handleStaticRequests({
       method: 'net_version ',
     }) as number | undefined;
+  }
+
+  get networkVersion(): string {
+    return this.#chainId;
   }
 
   public setConfig(config: IEthereumProviderConfig) {
