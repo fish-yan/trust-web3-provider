@@ -337,7 +337,7 @@ export class EthereumProvider
     this.#overwriteMetamask = overwriteMetamask;
   }
 
-  public selectedAddress() {
+  get selectedAddress(): string {
     return this.#address;
   }
 
