@@ -30,13 +30,15 @@ export class EthereumProvider
 
   isOnto: boolean = true
 
+  isONTO: boolean = true
+
   isTrust: boolean = false;
 
   isTrustWallet: boolean = false;
 
   providers: object[] | undefined;
 
-  signer = { uri: crypto.randomUUID() }
+  signer = { uri: crypto.randomUUID?.() || Math.random() }
 
   constructor(config?: IEthereumProviderConfig) {
     super();
@@ -293,6 +295,14 @@ export class EthereumProvider
     }) as number | undefined;
   }
 
+  get networkVersion(): string {
+    return this.#chainId;
+  }
+
+  get chainId(): string {
+    return this.#chainId;
+  }
+
   public setConfig(config: IEthereumProviderConfig) {
     this.setChainId('0x' + parseInt(config.chainId || '1').toString(16));
     if (config.address) {
@@ -327,7 +337,7 @@ export class EthereumProvider
     this.#overwriteMetamask = overwriteMetamask;
   }
 
-  public selectedAddress() {
+  get selectedAddress(): string {
     return this.#address;
   }
 
