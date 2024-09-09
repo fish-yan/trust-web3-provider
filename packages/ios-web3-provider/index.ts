@@ -2,11 +2,12 @@ import { EthereumProvider } from '@trustwallet/web3-provider-ethereum';
 import { SolanaProvider } from '@trustwallet/web3-provider-solana';
 import { Web3Provider } from '@trustwallet/web3-provider-core';
 import { AptosProvider } from '@trustwallet/web3-provider-aptos';
-import { TonProvider } from '@trustwallet/web3-provider-ton';
+import { TonBridge, TonProvider } from '@trustwallet/web3-provider-ton';
 import { ISolanaProviderConfig } from '@trustwallet/web3-provider-solana/types/SolanaProvider';
 import { IEthereumProviderConfig } from '@trustwallet/web3-provider-ethereum/types/EthereumProvider';
 import { IAptosProviderConfig } from '@trustwallet/web3-provider-aptos/types/AptosProvider';
 import { ITonProviderConfig } from '@trustwallet/web3-provider-ton/types/TonProvider';
+import { DeviceInfo, WalletInfo } from '@trustwallet/web3-provider-ton/dist/types/types/TonBridge';
 
 export interface IWalletConfig {
   ethereum: IEthereumProviderConfig;
@@ -43,6 +44,32 @@ function setConfig(config: IWalletConfig) {
     const solana = new SolanaProvider(config.solana);
     const aptos = new AptosProvider(config.aptos);
     const ton = new TonProvider(config.ton);
+
+    const bridgeConfig: {
+      isWalletBrowser: boolean;
+      walletInfo: WalletInfo;
+      deviceInfo: DeviceInfo;
+    } = {
+      isWalletBrowser: true,
+      walletInfo: {
+        name: "ONTO",
+        app_name: "ONTO",
+        image: "https://github.com/fish-yan/trust-web3-provider/tree/onto_full/packages/ios-web3-provider/assets/onto.png",
+        tondns: "onto.app",
+        about_url: "https://onto.app",
+        platforms: ['ios', 'android']
+      },
+      deviceInfo: {
+        platform: /(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent) ? "iphone" : "android",
+        appName: "ONTO",
+        appVersion: "4.8.2",
+        maxProtocolVersion: 2,
+        features: [{ name: 'SendTransaction', maxMessages: 1000 }, { name: 'SignData' }]
+      }
+    };
+    
+    const bridge = new TonBridge(bridgeConfig, ton);
+
     ethereum.providers = [ethereum];
 
     core.registerProviders([ethereum, solana, aptos, ton].map(provider => {
@@ -65,14 +92,13 @@ function setConfig(config: IWalletConfig) {
       ethereum: ethereum,
       solana: solana,
       aptos: aptos,
-      ton: ton,
-      onto: ethereum
+      onto: ethereum,
     }
     window.onto = {
       ethereum: ethereum,
       solana: solana,
       aptos: aptos,
-      ton: ton,
+      tonconnect: bridge
     }
 
     Object.assign(window.trustwallet, {

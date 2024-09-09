@@ -18,9 +18,20 @@ export type DeviceInfo = {
 
 export interface WalletInfo {
   name: string;
+  app_name: string;
   image: string;
   tondns?: string;
   about_url: string;
+  platforms: (
+    | 'ios'
+    | 'android'
+    | 'macos'
+    | 'windows'
+    | 'linux'
+    | 'chrome'
+    | 'firefox'
+    | 'safari'
+)[];
 }
 
 export type ConnectRequest = {
