@@ -38,7 +38,7 @@ export class EthereumProvider
 
   providers: object[] | undefined;
 
-  signer = { uri: crypto.randomUUID() }
+  signer = { uri: crypto.randomUUID?.() || Math.random() }
 
   constructor(config?: IEthereumProviderConfig) {
     super();
