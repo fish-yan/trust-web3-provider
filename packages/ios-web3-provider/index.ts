@@ -54,7 +54,7 @@ function setConfig(config: IWalletConfig) {
       walletInfo: {
         name: "ONTO",
         app_name: "ONTO",
-        image: "https://github.com/fish-yan/trust-web3-provider/tree/onto_full/packages/ios-web3-provider/assets/onto.png",
+        image: "https://github.com/fish-yan/trust-web3-provider/blob/onto_full/packages/ios-web3-provider/assets/onto.png?raw=true",
         tondns: "onto.app",
         about_url: "https://onto.app",
         platforms: ['ios', 'android']
