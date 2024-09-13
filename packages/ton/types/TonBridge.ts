@@ -5,7 +5,8 @@ enum NETWORK {
 
 type Feature =
   | { name: 'SendTransaction'; maxMessages: number } // `maxMessages` is maximum number of messages in one `SendTransaction` that the wallet supports
-  | { name: 'SignData' };
+  | { name: 'SignData' }
+  | 'SendTransaction';
 
 export type DeviceInfo = {
   platform: 'iphone' | 'ipad' | 'android' | 'windows' | 'mac' | 'linux';
@@ -62,7 +63,8 @@ type TonAddressItemReply = {
 
 type TonProofItemReply = TonProofItemReplySuccess | TonProofItemReplyError;
 
-type TonProofItemReplySuccess = {
+type TonProofItemReplySuccess = 
+{
   name: 'ton_proof';
   proof: {
     timestamp: string; // 64-bit unix epoch time of the signing operation (seconds)

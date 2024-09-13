@@ -10,6 +10,7 @@ declare global {
     webkit: any;
     ethereum: IEthereumProvider;
     onto: any;
+    tonkeeper: any;
     phantom: any;
     solana: ISolanaProvider;
     aptos: IAptosProvider;

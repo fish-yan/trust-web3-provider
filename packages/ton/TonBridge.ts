@@ -130,6 +130,13 @@ export class TonBridge implements TonConnectBridge {
     }
   }
 
+  disconnect() {
+    return this.emit({
+      event: 'disconnect',
+      payload: { },
+    });
+  }
+
   /**
    * Send ton method tonConnect_${method}
    * @param message

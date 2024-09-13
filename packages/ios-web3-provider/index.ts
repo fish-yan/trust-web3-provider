@@ -11,8 +11,8 @@ import { DeviceInfo, WalletInfo } from '@trustwallet/web3-provider-ton/dist/type
 
 export interface IWalletConfig {
   ethereum: IEthereumProviderConfig;
-  solana: ISolanaProviderConfig;
-  aptos: IAptosProviderConfig;
+  // solana: ISolanaProviderConfig;
+  // aptos: IAptosProviderConfig;
   ton: ITonProviderConfig;
 }
 
@@ -41,8 +41,8 @@ function setConfig(config: IWalletConfig) {
 
     // Generate instances
     const ethereum = new EthereumProvider(config.ethereum);
-    const solana = new SolanaProvider(config.solana);
-    const aptos = new AptosProvider(config.aptos);
+    // const solana = new SolanaProvider(config.solana);
+    // const aptos = new AptosProvider(config.aptos);
     const ton = new TonProvider(config.ton);
 
     const bridgeConfig: {
@@ -54,7 +54,7 @@ function setConfig(config: IWalletConfig) {
       walletInfo: {
         name: "ONTO",
         app_name: "ONTO",
-        image: "https://github.com/fish-yan/trust-web3-provider/blob/onto_full/packages/ios-web3-provider/assets/onto.png?raw=true",
+        image: "https://app.ont.io/ontoMsgPic/onto.png",
         tondns: "onto.app",
         about_url: "https://onto.app",
         platforms: ['ios', 'android']
@@ -64,7 +64,7 @@ function setConfig(config: IWalletConfig) {
         appName: "ONTO",
         appVersion: "4.8.2",
         maxProtocolVersion: 2,
-        features: [{ name: 'SendTransaction', maxMessages: 1000 }, { name: 'SignData' }]
+        features: [ 'SendTransaction', { name: 'SendTransaction', maxMessages: 255 }, { name: 'SignData' }]
       }
     };
     
@@ -72,7 +72,7 @@ function setConfig(config: IWalletConfig) {
 
     ethereum.providers = [ethereum];
 
-    core.registerProviders([ethereum, solana, aptos, ton].map(provider => {
+    core.registerProviders([ethereum, ton].map(provider => {
       provider.sendResponse = core.sendResponse.bind(core);
       provider.sendError = core.sendError.bind(core);
       return provider;
@@ -80,24 +80,26 @@ function setConfig(config: IWalletConfig) {
 
     // Attach to window
     window.ethereum = ethereum;
-    
-    window.phantom = {
-      solana: solana
-    }
-    window.solana = solana
-    window.aptos = aptos
-    window.ton = ton
+    // window.phantom = {
+    //   solana: solana
+    // }
+    // window.solana = solana
+    // window.aptos = aptos
 
     window.trustwallet = {
       ethereum: ethereum,
-      solana: solana,
-      aptos: aptos,
+      // solana: solana,
+      // aptos: aptos,
       onto: ethereum,
     }
     window.onto = {
       ethereum: ethereum,
-      solana: solana,
-      aptos: aptos,
+      // solana: solana,
+      // aptos: aptos,
+      tonconnect: bridge,
+      ton: ton
+    }
+    window.tonkeeper = {
       tonconnect: bridge
     }
 
