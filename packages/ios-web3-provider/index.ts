@@ -85,6 +85,8 @@ function setConfig(config: IWalletConfig) {
     }
     window.solana = solana
     window.aptos = aptos
+    window.martian = aptos;
+    window.pontem = aptos;
     window.tonkeeper = {
       tonconnect: bridge
     }
@@ -92,6 +94,7 @@ function setConfig(config: IWalletConfig) {
     window.trustwallet = {
       ethereum: ethereum,
       onto: ethereum,
+      aptos: aptos,
     }
     window.onto = {
       ethereum: ethereum,

@@ -14,6 +14,8 @@ declare global {
     phantom: any;
     solana: ISolanaProvider;
     aptos: IAptosProvider;
+    martian: IAptosProvider;
+    pontem: IAptosProvider;
     ton: ITonProvider;
     _tw_: any;
     setConfig: (config: IWalletConfig) => void;
