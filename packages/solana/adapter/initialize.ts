@@ -1,7 +1,7 @@
 import { registerWallet } from './register';
 import { ONTOWallet } from './wallet';
-import type { ONTO } from './window';
+import type { ISolanaProvider } from './window';
 
-export function initialize(ONTO: ONTO): void {
+export function initialize(ONTO: ISolanaProvider): void {
     registerWallet(new ONTOWallet(ONTO));
 }

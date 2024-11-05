@@ -11,8 +11,8 @@ import { DeviceInfo, WalletInfo } from '@trustwallet/web3-provider-ton/dist/type
 
 export interface IWalletConfig {
   ethereum: IEthereumProviderConfig;
-  // solana: ISolanaProviderConfig;
-  // aptos: IAptosProviderConfig;
+  solana: ISolanaProviderConfig;
+  aptos: IAptosProviderConfig;
   ton: ITonProviderConfig;
 }
 
@@ -41,8 +41,8 @@ function setConfig(config: IWalletConfig) {
 
     // Generate instances
     const ethereum = new EthereumProvider(config.ethereum);
-    // const solana = new SolanaProvider(config.solana);
-    // const aptos = new AptosProvider(config.aptos);
+    const solana = new SolanaProvider(config.solana);
+    const aptos = new AptosProvider(config.aptos);
     const ton = new TonProvider(config.ton);
 
     const bridgeConfig: {
@@ -72,7 +72,7 @@ function setConfig(config: IWalletConfig) {
 
     ethereum.providers = [ethereum];
 
-    core.registerProviders([ethereum, ton].map(provider => {
+    core.registerProviders([ethereum, solana, aptos, ton].map(provider => {
       provider.sendResponse = core.sendResponse.bind(core);
       provider.sendError = core.sendError.bind(core);
       return provider;
@@ -80,27 +80,25 @@ function setConfig(config: IWalletConfig) {
 
     // Attach to window
     window.ethereum = ethereum;
-    // window.phantom = {
-    //   solana: solana
-    // }
-    // window.solana = solana
-    // window.aptos = aptos
+    window.phantom = {
+      solana: solana
+    }
+    window.solana = solana
+    window.aptos = aptos
+    window.tonkeeper = {
+      tonconnect: bridge
+    }
 
     window.trustwallet = {
       ethereum: ethereum,
-      // solana: solana,
-      // aptos: aptos,
       onto: ethereum,
     }
     window.onto = {
       ethereum: ethereum,
-      // solana: solana,
-      // aptos: aptos,
+      solana: solana,
+      aptos: aptos,
       tonconnect: bridge,
       ton: ton
-    }
-    window.tonkeeper = {
-      tonconnect: bridge
     }
 
     Object.assign(window.trustwallet, {
