@@ -20,13 +20,13 @@ export class MobileAdapter {
   async connect(
     options?: ConnectOptions | undefined,
   ): Promise<{ publicKey: PublicKey }> {
-    const addresses = await this.provider.internalRequest<string[]>({
+    const address = await this.provider.internalRequest<string[]>({
       method: 'requestAccounts',
       params: { options },
     });
 
     this.provider.emit('connect');
-    return { publicKey: new PublicKey(addresses[0]) };
+    return { publicKey: new PublicKey(address) };
   }
 
   async signTransaction<T extends Transaction | VersionedTransaction>(
@@ -44,7 +44,7 @@ export class MobileAdapter {
       method: 'signTransaction',
       params: { message: rawMessage },
     });
-
+    const result = JSON.parse(response)
     return this.provider.mapSignedTransaction<T>(tx, response.signature);
   }
 
