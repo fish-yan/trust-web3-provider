@@ -44,7 +44,7 @@ export class MobileAdapter {
       method: 'signTransaction',
       params: { message: rawMessage },
     });
-    const result = JSON.parse(response)
+    
     return this.provider.mapSignedTransaction<T>(tx, response.signature);
   }
 
