@@ -8,12 +8,15 @@ import { IEthereumProviderConfig } from '@trustwallet/web3-provider-ethereum/typ
 import { IAptosProviderConfig } from '@trustwallet/web3-provider-aptos/types/AptosProvider';
 import { ITonProviderConfig } from '@trustwallet/web3-provider-ton/types/TonProvider';
 import { DeviceInfo, WalletInfo } from '@trustwallet/web3-provider-ton/dist/types/types/TonBridge';
+import { NeoProvider } from "@trustwallet/web3-provider-neo";
+import { INeoProviderConfig } from '@trustwallet/web3-provider-neo/types/NeoProvider';
 
 export interface IWalletConfig {
   ethereum: IEthereumProviderConfig;
   solana: ISolanaProviderConfig;
   aptos: IAptosProviderConfig;
   ton: ITonProviderConfig;
+  neo: INeoProviderConfig
 }
 
 window.trustwallet = {};
@@ -44,6 +47,7 @@ function setConfig(config: IWalletConfig) {
     const solana = new SolanaProvider(config.solana);
     const aptos = new AptosProvider(config.aptos);
     const ton = new TonProvider(config.ton);
+    const neon3 = new NeoProvider(config.neo)
 
     const bridgeConfig: {
       isWalletBrowser: boolean;
@@ -72,7 +76,7 @@ function setConfig(config: IWalletConfig) {
 
     ethereum.providers = [ethereum];
 
-    core.registerProviders([ethereum, solana, aptos, ton].map(provider => {
+    core.registerProviders([ethereum, solana, aptos, ton, neon3].map(provider => {
       provider.sendResponse = core.sendResponse.bind(core);
       provider.sendError = core.sendError.bind(core);
       return provider;
@@ -90,6 +94,9 @@ function setConfig(config: IWalletConfig) {
     window.tonkeeper = {
       tonconnect: bridge
     }
+    window.neo = neon3;
+    window.OneGate = neon3;
+    window.Vital = neon3;
 
     window.trustwallet = {
       ethereum: ethereum,
@@ -101,7 +108,8 @@ function setConfig(config: IWalletConfig) {
       solana: solana,
       aptos: aptos,
       tonconnect: bridge,
-      ton: ton
+      ton: ton,
+      neo: neon3
     }
 
     Object.assign(window.trustwallet, {

@@ -1,5 +1,5 @@
 {
-  "name": "@trustwallet/web3-provider-neon",
+  "name": "@trustwallet/web3-provider-neo",
   "version": "4.0.0",
   "type": "module",
   "main": "dist/index.cjs.js",
@@ -18,7 +18,7 @@
     "build:source": "bun build:clean; rollup --config ./rollup.config.js; bun run build:types",
     "dev": "bun build ./index.ts --outdir ./dist --watch"
   },
-  "dependencies": { },
+  "dependencies": { "@cityofzion/neon-core": "^5.6.0" },
   "devDependencies": {
     "@trustwallet/web3-provider-core": "workspace:*"
   }
