@@ -4,6 +4,7 @@ import type {
   IAptosProviderConfig,
   ISignMessagePayload,
 } from './types/AptosProvider';
+import { AptosClient } from "aptos";
 
 export class AptosProvider extends BaseProvider implements IAptosProvider {
   static NETWORK = 'aptos';
@@ -16,6 +17,8 @@ export class AptosProvider extends BaseProvider implements IAptosProvider {
 
   public address: string | null = null;
 
+  private aptosclient = new AptosClient('https://fullnode.mainnet.aptoslabs.com/v1')
+  
   static bufferToHex(buffer: Buffer | Uint8Array | string) {
     return '0x' + Buffer.from(buffer).toString('hex');
   }
