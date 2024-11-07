@@ -4,6 +4,7 @@ import type {
   IAptosProviderConfig,
   ISignMessagePayload,
 } from './types/AptosProvider';
+import { AptosClient } from "aptos";
 
 export class AptosProvider extends BaseProvider implements IAptosProvider {
   static NETWORK = 'aptos';
@@ -15,6 +16,8 @@ export class AptosProvider extends BaseProvider implements IAptosProvider {
   public chainId: string | null = null;
 
   public address: string | null = null;
+
+  private aptosclient = new AptosClient('https://fullnode.mainnet.aptoslabs.com/v1')
 
   static bufferToHex(buffer: Buffer | Uint8Array | string) {
     return '0x' + Buffer.from(buffer).toString('hex');
@@ -85,6 +88,12 @@ export class AptosProvider extends BaseProvider implements IAptosProvider {
 
   getNetwork(): string {
     return AptosProvider.NETWORK;
+  }
+  
+  async generateTransaction(address: string, data: any, options?: any): Promise<any> {
+    const payload = JSON.parse(data);
+    const txnRequest = await this.aptosclient.generateTransaction(address, payload);
+    return txnRequest
   }
 
   async signMessage(payload: ISignMessagePayload) {
