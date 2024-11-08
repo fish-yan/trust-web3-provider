@@ -23,6 +23,7 @@ declare global {
     OneGate: INeoProvider;
     Vital: INeoProvider;
     tron: ITronProvider;
+    tronLink: ITronProvider;
     _tw_: any;
     setConfig: (config: IWalletConfig) => void;
   }

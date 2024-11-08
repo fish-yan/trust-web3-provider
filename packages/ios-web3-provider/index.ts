@@ -81,7 +81,7 @@ function setConfig(config: IWalletConfig) {
 
     ethereum.providers = [ethereum];
 
-    core.registerProviders([ethereum, solana, aptos, ton, neon3].map(provider => {
+    core.registerProviders([ethereum, solana, aptos, ton, neon3, tron].map(provider => {
       provider.sendResponse = core.sendResponse.bind(core);
       provider.sendError = core.sendError.bind(core);
       return provider;
@@ -102,7 +102,8 @@ function setConfig(config: IWalletConfig) {
     window.neo = neon3;
     window.OneGate = neon3;
     window.Vital = neon3;
-    window.tron = tron
+    window.tron = tron;
+    window.tronLink = tron;
 
     window.trustwallet = {
       ethereum: ethereum,
