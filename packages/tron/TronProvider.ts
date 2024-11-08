@@ -9,20 +9,19 @@ export class Trx implements ITrx {
   constructor(tronProveder: TronProvider) {
     this.tronProveder = tronProveder;
   }
-  sign(transaction: any, privateKey: string): SignedTransaction {
-    const data = {
-      data: transaction
-    }
-    const promise = this.tronProveder.internalRequest<String>({
+  sign(transaction: any, privateKey: string): Promise<SignedTransaction> {
+    const promise = this.tronProveder.internalRequest<string>({
       method: "sign",
-      params: data
+      params: transaction
     })
-    var signedTransaction: any
-    promise.then((signature) => {
-      signedTransaction = { signature: signature, contract_address: "" }
-      return signedTransaction
+    return new Promise((resolve, reject) => {
+      promise.then((signature) => {
+        resolve({ signature: [signature], contract_address: "" })
+      })
+      .catch((e) => {
+        reject(e)
+      })
     })
-    return signedTransaction
   }
 
 }

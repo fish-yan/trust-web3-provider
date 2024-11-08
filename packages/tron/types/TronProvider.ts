@@ -15,12 +15,12 @@ export interface TronNode {
 }
 
 export interface SignedTransaction {
-  signature: string;
+  signature: string[];
   contract_address?: string;
 }
 
 export interface ITrx {
-  sign(transaction: any, privateKey: string): SignedTransaction
+  sign(transaction: any, privateKey: string): Promise<SignedTransaction>
 }
 
 export interface ITronWeb {
