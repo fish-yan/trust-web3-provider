@@ -86,6 +86,11 @@ export class AptosProvider extends BaseProvider implements IAptosProvider {
   getNetwork(): string {
     return AptosProvider.NETWORK;
   }
+  
+  async generateTransaction(address: string, data: any, options?: any): Promise<any> {
+    // const txnRequest = await this.aptosclient.generateTransaction(address, data);
+    return data
+  }
 
   async signMessage(payload: ISignMessagePayload) {
     const prefix = 'APTOS';
@@ -130,15 +135,14 @@ export class AptosProvider extends BaseProvider implements IAptosProvider {
     );
   }
 
-  async signAndSubmitTransaction(tx: string) {
-    const signedTx = await this.signTransaction(tx);
+  async signAndSubmitTransaction(tx: any) {
+    // const signedTx = await this.signTransaction(tx);
 
     const hex = await this.request<string>({
       method: 'sendTransaction',
-      params: { tx: signedTx },
+      params: { tx: tx },
     });
-
-    return { hash: AptosProvider.messageToBuffer(hex).toString() };
+    return hex;
   }
 
   async signTransaction(tx: string) {

@@ -1,5 +1,10 @@
 import { IRequestArguments } from "@trustwallet/web3-provider-core";
 
+export interface NeoAccount {
+  address: string;
+  publicKey: string;
+}
+
 export interface INeoProviderConfig {
   isTrust?: boolean;
   address: string;

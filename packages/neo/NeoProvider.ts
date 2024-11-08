@@ -2,7 +2,7 @@
 
 import { BaseProvider, IRequestArguments } from '@trustwallet/web3-provider-core';
 import type INeoProvider from './types/NeoProvider';
-import type { INeoProviderConfig } from './types/NeoProvider';
+import type { INeoProviderConfig, NeoAccount } from './types/NeoProvider';
 import { rpc } from "@cityofzion/neon-core";
 
 export class NeoProvider
@@ -47,14 +47,10 @@ export class NeoProvider
     })
   }
 
-  _getAccount() {
-    let that = this;
-    return new Promise(function (resolve, reject) {
-      resolve({
-        address: that.address,
-        label: that.label,
-        publicKey: that.publicKey
-      })
+  async _getAccount() {
+    return await this.internalRequest<NeoAccount>({
+      method: "requestAccounts",
+      params: {}
     })
   }
 
