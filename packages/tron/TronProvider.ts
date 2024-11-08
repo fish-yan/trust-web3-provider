@@ -1,57 +1,9 @@
 
 
 import { BaseProvider, IRequestArguments } from '@trustwallet/web3-provider-core';
-import type { ITronProvider, ITronProviderConfig, ITronWeb, ITrx, SignedTransaction, TronAddress, TronNode } from './types/TronProvider';
-import { fromHex, toHex } from 'tronweb/lib/esm/utils';
-
-export class Trx implements ITrx {
-  tronProveder: TronProvider;
-  constructor(tronProveder: TronProvider) {
-    this.tronProveder = tronProveder;
-  }
-  sign(transaction: any, privateKey: string): Promise<SignedTransaction> {
-    const promise = this.tronProveder.internalRequest<string>({
-      method: "sign",
-      params: transaction
-    })
-    return new Promise((resolve, reject) => {
-      promise.then((signature) => {
-        resolve({ signature: [signature], contract_address: "" })
-      })
-      .catch((e) => {
-        reject(e)
-      })
-    })
-  }
-
-}
-
-export class TronWeb implements ITronWeb {
-  defaultAddress: TronAddress;
-  ready: boolean = true;
-  fullNode: TronNode;
-  solidityNode: TronNode;
-  eventServer: TronNode;
-  trx: ITrx;
-  tronProveder: TronProvider;
-
-  constructor(address: string, tronProveder: TronProvider, fullNode?: string, solidityNode?: string, eventServer?: string) {
-    this.defaultAddress = {
-      base58: address
-    };
-    this.fullNode = {
-      host: fullNode
-    };
-    this.solidityNode = {
-      host: solidityNode
-    };
-    this.eventServer = {
-      host: eventServer
-    };
-    this.tronProveder = tronProveder;
-    this.trx = new Trx(tronProveder);
-  }
-}
+import type { ITronProvider, ITronProviderConfig } from './types/TronProvider';
+import { TronWeb } from 'tronweb';
+import { SignedTransaction, DefaultAddress } from 'tronweb/lib/esm/types';
 
 export class TronProvider
   extends BaseProvider
@@ -59,21 +11,35 @@ export class TronProvider
 
   static NETWORK = 'Tron';
 
-  tronWeb: ITronWeb;
+  public tronWeb: TronWeb & {ready?: boolean};
+
+  getNetwork(): string {
+    return TronProvider.NETWORK;
+  }
 
   constructor(config?: ITronProviderConfig) {
     super();
     var configAddress: string = config?.address || '';
-    this.tronWeb = new TronWeb("", this, "https://api.trongrid.io", "https://api.trongrid.io", "https://api.trongrid.io")
-    const base58 = fromHex(configAddress);
-    const hex = toHex(configAddress);
-    const tokenAddress = { base58, hex }
-    this.tronWeb.defaultAddress = tokenAddress
-  }
-
-
-  getNetwork(): string {
-    return TronProvider.NETWORK;
+    this.tronWeb = new TronWeb("https://api.trongrid.io", "https://api.trongrid.io", "https://api.trongrid.io")
+    this.tronWeb.ready = true
+    this.tronWeb.defaultAddress = {
+      base58: configAddress,
+      hex: false
+    }
+    const that = this
+    // @ts-ignore
+    this.tronWeb.trx.sign = async function (transaction, privateKey, useTronHeader, multisig) {
+      if (typeof transaction === 'string') {
+        throw new Error("unsupport");
+      }
+      const signature = await that.internalRequest<string>({
+        method: "sign",
+        params: transaction
+      })
+      const signedTransaction = transaction as SignedTransaction
+      signedTransaction.signature = [signature];
+      return transaction;
+    }
   }
 
   request(args: IRequestArguments): Promise<any> {
@@ -84,8 +50,8 @@ export class TronProvider
     }
   }
 
-  requestAccount(): Promise<TronAddress> {
-    const addressPromise = this.internalRequest<TronAddress>({
+  requestAccount(): Promise<DefaultAddress> {
+    const addressPromise = this.internalRequest<DefaultAddress>({
       method: "requestAccounts",
       params: {}
     })

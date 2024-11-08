@@ -104,6 +104,7 @@ function setConfig(config: IWalletConfig) {
     window.Vital = neon3;
     window.tron = tron;
     window.tronLink = tron;
+    window.tronWeb = tron.tronWeb;
 
     window.trustwallet = {
       ethereum: ethereum,
