@@ -181,3 +181,5 @@ android/app/build/*
 android/lib/build/*
 android/.gradle
 local.properties
+bun.lockb
+bun.lockb

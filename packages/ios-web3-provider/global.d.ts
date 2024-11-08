@@ -4,6 +4,7 @@ import ISolanaProvider from "@trustwallet/web3-provider-solana/types/SolanaProvi
 import IAptosProvider from "@trustwallet/web3-provider-aptos/types/AptosProvider";
 import ITonProvider from "@trustwallet/web3-provider-ton/types/TonProvider";
 import INeoProvider from "@trustwallet/web3-provider-neo/types/NeoProvider";
+import ITronProvider from "@trustwallet/web3-provider-tron/types/TronProvider";
 
 declare global {
   interface Window {
@@ -21,6 +22,7 @@ declare global {
     neo: INeoProvider;
     OneGate: INeoProvider;
     Vital: INeoProvider;
+    tron: ITronProvider;
     _tw_: any;
     setConfig: (config: IWalletConfig) => void;
   }
