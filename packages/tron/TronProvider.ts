@@ -9,7 +9,7 @@ export class TronProvider
   extends BaseProvider
   implements ITronProvider {
 
-  static NETWORK = 'Tron';
+  static NETWORK = 'tron';
 
   public tronWeb: TronWeb & {ready?: boolean};
 
@@ -33,7 +33,7 @@ export class TronProvider
         throw new Error("unsupport");
       }
       const signature = await that.internalRequest<string>({
-        method: "sign",
+        method: "signTransaction",
         params: transaction
       })
       const signedTransaction = transaction as SignedTransaction
