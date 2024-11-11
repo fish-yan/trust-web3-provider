@@ -72,11 +72,11 @@ export class AptosProvider extends BaseProvider implements IAptosProvider {
   }
 
   async account() {
-    const data = await this.request<any>({
+    const address = await this.request<string>({
       method: 'requestAccounts',
       params: {},
     });
-    return data;
+    return { address: address };
   }
 
   network() {

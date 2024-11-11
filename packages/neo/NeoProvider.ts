@@ -48,10 +48,11 @@ export class NeoProvider
   }
 
   async _getAccount() {
-    return await this.internalRequest<NeoAccount>({
+    const address = await this.internalRequest<string>({
       method: "requestAccounts",
       params: {}
     })
+    return { address: address }
   }
 
   _getNetworks() {

@@ -50,15 +50,16 @@ export class TronProvider
     }
   }
 
-  requestAccount(): Promise<DefaultAddress> {
-    const addressPromise = this.internalRequest<DefaultAddress>({
+  async requestAccount(){
+    const address = await this.internalRequest<string>({
       method: "requestAccounts",
       params: {}
     })
-    addressPromise.then((address) => {
-      this.tronWeb.defaultAddress = address
-    })
-    return addressPromise
+    this.tronWeb.defaultAddress = {
+      base58: address,
+      hex: false
+    }
+    return this.tronWeb.defaultAddress
 
   }
 
