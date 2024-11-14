@@ -105,9 +105,8 @@ function setConfig(config: IWalletConfig) {
 
     window.trustwallet = {
       ethereum: ethereum,
-      onto: ethereum,
     }
-    window.onto = {
+    window.walletOnto = {
       ethereum: ethereum,
       solana: solana,
       aptos: aptos,
@@ -123,6 +122,14 @@ function setConfig(config: IWalletConfig) {
       send: ethereum.send.bind(ethereum),
       on: (...params: any) => window.trustwallet.ethereum.on(...params),
       off: (...params: any) => window.trustwallet.ethereum.off(...params),
+    });
+
+    Object.assign(window.walletOnto, {
+      isOnto: true,
+      request: ethereum.request.bind(ethereum),
+      send: ethereum.send.bind(ethereum),
+      on: (...params: any) => window.walletOnto.ethereum.on(...params),
+      off: (...params: any) => window.walletOnto.ethereum.off(...params),
     });
 
     const EIP6963Icon =

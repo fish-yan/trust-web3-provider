@@ -11,7 +11,7 @@ declare global {
     trustwallet: any;
     webkit: any;
     ethereum: IEthereumProvider;
-    onto: any;
+    walletOnto: any;
     tonkeeper: any;
     phantom: any;
     solana: ISolanaProvider;
