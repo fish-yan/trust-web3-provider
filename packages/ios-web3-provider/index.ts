@@ -62,7 +62,7 @@ function setConfig(config: IWalletConfig) {
       isWalletBrowser: true,
       walletInfo: {
         name: "ONTO",
-        app_name: "ONTO",
+        app_name: "tonkeeper",
         image: "https://app.ont.io/ontoMsgPic/onto.png",
         tondns: "onto.app",
         about_url: "https://onto.app",
@@ -70,7 +70,7 @@ function setConfig(config: IWalletConfig) {
       },
       deviceInfo: {
         platform: /(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent) ? "iphone" : "android",
-        appName: "ONTO",
+        appName: "tonkeeper",
         appVersion: "4.8.2",
         maxProtocolVersion: 2,
         features: ['SendTransaction', { name: 'SendTransaction', maxMessages: 255 }, { name: 'SignData' }]
