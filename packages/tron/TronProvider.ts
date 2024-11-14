@@ -2,7 +2,7 @@
 
 import { BaseProvider, IRequestArguments } from '@trustwallet/web3-provider-core';
 import type { ITronProvider, ITronProviderConfig } from './types/TronProvider';
-import { TronWeb } from 'tronweb';
+import { TronWeb, Trx } from 'tronweb';
 import { SignedTransaction, DefaultAddress } from 'tronweb/lib/esm/types';
 
 export class TronProvider
@@ -11,7 +11,7 @@ export class TronProvider
 
   static NETWORK = 'tron';
 
-  public tronWeb: TronWeb & {ready?: boolean};
+  public tronWeb: TronWeb & { ready?: boolean };
 
   getNetwork(): string {
     return TronProvider.NETWORK;
@@ -30,8 +30,13 @@ export class TronProvider
     // @ts-ignore
     this.tronWeb.trx.sign = async function (transaction, privateKey, useTronHeader, multisig) {
       if (typeof transaction === 'string') {
-        throw new Error("unsupport");
+        const signatureMessage = await that.internalRequest<string>({
+          method: "signMessage",
+          params: {transaction}
+        })
+        return signatureMessage;
       }
+
       const signature = await that.internalRequest<string>({
         method: "signTransaction",
         params: transaction
@@ -42,6 +47,7 @@ export class TronProvider
     }
   }
 
+
   request(args: IRequestArguments): Promise<any> {
     switch (args.method) {
       case "tron_requestAccounts":
@@ -50,7 +56,7 @@ export class TronProvider
     }
   }
 
-  async requestAccount(){
+  async requestAccount() {
     const address = await this.internalRequest<string>({
       method: "requestAccounts",
       params: {}
