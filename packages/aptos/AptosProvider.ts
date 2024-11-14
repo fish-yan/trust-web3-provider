@@ -5,7 +5,7 @@ import type {
   ISignMessagePayload,
 } from './types/AptosProvider';
 import { APTOS_CHAINS, AptosFeatures, AptosWallet, registerWallet, UserResponseStatus, WalletAccount } from '@aptos-labs/wallet-standard';
-import { Deserializer, RawTransaction, Serializer} from '@aptos-labs/ts-sdk'
+import { Deserializer, RawTransaction, Serializer, SimpleTransaction} from '@aptos-labs/ts-sdk'
 
 export class AptosProvider extends BaseProvider implements AptosWallet {
   static NETWORK = 'aptos';
@@ -195,19 +195,27 @@ export class AptosProvider extends BaseProvider implements AptosWallet {
     );
   }
 
-  async signAndSubmitTransaction(tx: any) {
-    const rawTransaction = tx.rawTransaction as RawTransaction;
-    var serialize = new Serializer();
-    rawTransaction.serialize(serialize);
-    const bytes = serialize.toUint8Array();
-    // const des = new Deserializer(bytes)
-    // const raw = RawTransaction.deserialize(des)
-    
-    const txHex = AptosProvider.bufferToHex(bytes);
+  // async signAndSubmitTransaction(tx: any) {
+  //   const obj: Record<string, any> = {};
+  //   Object.entries(tx.rawTransaction).forEach(([key, v]) => {
+  //     obj[key] = typeof v === "bigint" ? v.toString() : v
+  //   });
+  //   tx.rawTransaction = obj;
+  //   const hex = await this.internalRequest<string>({
+  //     method: 'sendTransaction',
+  //     params: { tx: tx },
+  //   });
+  //   return hex;
+  // }
 
+  async signAndSubmitTransaction(tx: SimpleTransaction) {
+    var serialize = new Serializer()
+    tx.serialize(serialize)
+    const bytes = serialize.toUint8Array()    
+    const txHex = AptosProvider.bufferToHex(bytes)
     const hex = await this.internalRequest<string>({
       method: 'sendTransaction',
-      params: { tx: txHex},
+      params: { tx: txHex },
     });
     return hex;
   }
@@ -218,8 +226,7 @@ export class AptosProvider extends BaseProvider implements AptosWallet {
       params: { tx: tx },
     });
     return hex;
-    // return JSON.parse(AptosProvider.messageToBuffer(hex).toString());
-  }
+ }
   onNetworkChange = async (): Promise<void> => {
     return Promise.resolve();
   };
