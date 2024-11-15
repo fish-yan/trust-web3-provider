@@ -100,7 +100,6 @@ function setConfig(config: IWalletConfig) {
     window.OneGate = neon3;
     window.Vital = neon3;
     window.tron = tron;
-    window.tronLink = tron;
     window.tronWeb = tron.tronWeb;
 
     window.trustwallet = {
