@@ -3,8 +3,7 @@ import { TronWeb } from "tronweb";
 
 export interface ITronProviderConfig {
   isTrust?: boolean;
-  base58?: string
-  hex?: string
+  address?: string
 }
 
 export interface ITronProvider {
