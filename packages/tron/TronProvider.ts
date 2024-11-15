@@ -19,13 +19,9 @@ export class TronProvider
 
   constructor(config?: ITronProviderConfig) {
     super();
-    var configAddress: string = config?.address || '';
     this.tronWeb = new TronWeb("https://api.trongrid.io", "https://api.trongrid.io", "https://api.trongrid.io")
     this.tronWeb.ready = true
-    this.tronWeb.defaultAddress = {
-      base58: configAddress,
-      hex: false
-    }
+    this.tronWeb.setAddress(config?.hex ?? "")
     const that = this
     // @ts-ignore
     this.tronWeb.trx.sign = async function (transaction, privateKey, useTronHeader, multisig) {
@@ -36,6 +32,7 @@ export class TronProvider
         })
         return signatureMessage;
       }
+
 
       const signature = await that.internalRequest<string>({
         method: "signTransaction",
@@ -57,14 +54,11 @@ export class TronProvider
   }
 
   async requestAccount() {
-    const address = await this.internalRequest<string>({
+    const address = await this.internalRequest<DefaultAddress>({
       method: "requestAccounts",
       params: {}
     })
-    this.tronWeb.defaultAddress = {
-      base58: address,
-      hex: false
-    }
+    this.tronWeb.setAddress(address.hex as string)
     return this.tronWeb.defaultAddress
 
   }
