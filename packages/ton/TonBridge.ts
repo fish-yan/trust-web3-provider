@@ -31,36 +31,29 @@ const formatConnectEventError = (error: TonConnectError): ConnectEventError => {
  * Based on https://docs.ton.org/develop/dapps/ton-connect/protocol & open mask
  */
 export class TonBridge implements TonConnectBridge {
-  deviceInfo!: DeviceInfo;
-  walletInfo?: WalletInfo | undefined;
+  deviceInfo: DeviceInfo = {
+    platform: /(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent) ? "iphone" : "android",
+    appName: "tonkeeper",
+    appVersion: "4.8.2",
+    maxProtocolVersion: 2,
+    features: ['SendTransaction', { name: 'SendTransaction', maxMessages: 255 }, { name: 'SignData' }]
+  };
+  walletInfo?: WalletInfo | undefined = {
+    name: "ONTO",
+    app_name: "tonkeeper",
+    image: "https://app.ont.io/ontoMsgPic/onto.png",
+    tondns: "onto.app",
+    about_url: "https://onto.app",
+    platforms: ['ios', 'android']
+  };
   protocolVersion: number = 2;
   isWalletBrowser: boolean = true;
 
   private provider!: TonProvider;
   private callbacks: TonConnectCallback[] = [];
 
-  constructor(
-    config: {
-      isWalletBrowser: boolean;
-      walletInfo: WalletInfo;
-      deviceInfo: DeviceInfo;
-    },
-    provider: TonProvider,
+  constructor(provider: TonProvider,
   ) {
-    if (config) {
-      if (typeof config.isWalletBrowser !== 'undefined') {
-        this.isWalletBrowser = config.isWalletBrowser;
-      }
-
-      if (config.walletInfo) {
-        this.walletInfo = config.walletInfo;
-      }
-
-      if (config.deviceInfo) {
-        this.deviceInfo = config.deviceInfo;
-      }
-    }
-
     this.provider = provider;
   }
 

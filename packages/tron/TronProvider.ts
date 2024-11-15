@@ -21,8 +21,9 @@ export class TronProvider
     super();
     this.tronWeb = new TronWeb("https://api.trongrid.io", "https://api.trongrid.io", "https://api.trongrid.io")
     this.tronWeb.ready = true
-    const base58 = config?.address ?? ""
-    this.tronWeb.setAddress(base58)
+    if (config?.address) {
+      this.tronWeb.setAddress(config.address)
+    }
     const that = this
     // @ts-ignore
     this.tronWeb.trx.sign = async function (transaction, privateKey, useTronHeader, multisig) {
