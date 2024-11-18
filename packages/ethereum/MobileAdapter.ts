@@ -70,10 +70,11 @@ export class MobileAdapter {
           params: args.params,
         });
       case 'eth_requestAccounts':
-        return this.provider.internalRequest({
-          method: 'requestAccounts',
-          params: {},
-        });
+        return new Promise((resolve, reject) => {
+          this.provider.internalRequest<string>({ method: 'requestAccounts',  params: {}, })
+          .then((address) => resolve([address] as T))
+          .catch((error) => reject(error));
+        })
       case 'eth_sign':
         return this.ethSign(args.params as [string, string]);
       case 'personal_sign':

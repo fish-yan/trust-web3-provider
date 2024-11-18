@@ -93,7 +93,11 @@ export class EthereumProvider
    * @returns
    */
   public enable(): Promise<string[]> {
-    return this.request<string[]>({ method: 'eth_requestAccounts' });
+    return new Promise((resolve, reject) => {
+      this.request<string>({ method: 'eth_requestAccounts' })
+      .then((address) => resolve([address]))
+      .catch((error) => reject(error));
+    })
   }
 
   /**
@@ -263,7 +267,7 @@ export class EthereumProvider
     switch (req.method) {
       case 'eth_requestAccounts':
       case 'requestAccounts':
-        this.#address = (response as string[])[0];
+        this.#address = response as string;
         break;
       case 'wallet_requestPermissions':
         this.#address = (
