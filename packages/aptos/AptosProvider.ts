@@ -249,7 +249,8 @@ export class AptosProvider extends BaseProvider implements AptosWallet {
       params: { tx: tx },
     });
     let buffer = AptosProvider.messageToBuffer(signTx);
-    const des = new Deserializer(buffer);
+    const uint8Array: Uint8Array = new Uint8Array(buffer);
+    const des = new Deserializer(uint8Array);
     const senderAuthenticator = SimpleTransaction.deserialize(des);
     return {
       status: UserResponseStatus.APPROVED,
