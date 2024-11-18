@@ -187,13 +187,13 @@ export class SolanaProvider extends BaseProvider implements ISolanaProvider {
   ): Promise<{ signature: Uint8Array; publicKey: string | undefined }> {
     const data = SolanaProvider.bufferToHex(message);
 
-    const res = await this.#privateRequest<string>({
-      method: 'signMessage',
-      params: { data },
+    const res = await this.internalRequest<{ signature: string }>({
+      method: 'signTransaction',
+      params: { message: data },
     });
 
     return {
-      signature: Buffer.from(SolanaProvider.messageToBuffer(res).buffer),
+      signature: bs58.decode(res.signature),
       publicKey: this.publicKey?.toBase58(),
     };
   }

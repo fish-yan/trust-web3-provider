@@ -20,7 +20,7 @@ export class MobileAdapter {
   async connect(
     options?: ConnectOptions | undefined,
   ): Promise<{ publicKey: PublicKey }> {
-    const address = await this.provider.internalRequest<string[]>({
+    const address = await this.provider.internalRequest<string>({
       method: 'requestAccounts',
       params: { options },
     });
