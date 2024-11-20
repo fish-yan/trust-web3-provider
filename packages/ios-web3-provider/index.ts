@@ -78,7 +78,7 @@ function setEthereumConfig(config?: IEthereumProviderConfig) {
 
   const info = {
     uuid: crypto.randomUUID?.() || Math.random(),
-    name: 'ONTO Wallet',
+    name: 'ONTO',
     icon: EIP6963Icon,
     rdns: 'app.onto',
   };
