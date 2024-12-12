@@ -30,6 +30,10 @@ export class MobileAdapter {
     }
   }
 
+  static decodeUTF8(buffer: Buffer) {
+      return new TextDecoder('utf8', { fatal: true }).decode(buffer);
+  }
+
   static bufferToHex(buffer: Buffer | string) {
     return '0x' + Buffer.from(buffer).toString('hex');
   }
@@ -167,12 +171,13 @@ export class MobileAdapter {
     }
 
     const buffer = MobileAdapter.messageToBuffer(message);
+    const raw = MobileAdapter.decodeUTF8(buffer)
 
     return this.provider.internalRequest({
       method: 'signPersonalMessage',
       params: {
-        data:
-          buffer.length === 0 ? MobileAdapter.bufferToHex(message) : message,
+        data: buffer.length === 0 ? MobileAdapter.bufferToHex(message) : message,
+        raw: raw.length === 0 ? MobileAdapter.bufferToHex(message) : raw,
         address,
       },
     });
@@ -187,12 +192,13 @@ export class MobileAdapter {
 
     const buffer = MobileAdapter.messageToBuffer(message);
     const data = MobileAdapter.bufferToHex(buffer);
+    const raw = MobileAdapter.isUTF8(buffer) ? MobileAdapter.decodeUTF8(buffer) : message 
 
     return this.provider.internalRequest<T>({
       method: MobileAdapter.isUTF8(buffer)
         ? 'signPersonalMessage'
         : 'signMessage',
-      params: { data, address },
+      params: { data, raw, address },
     });
   }
 

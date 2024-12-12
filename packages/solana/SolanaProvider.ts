@@ -188,7 +188,7 @@ export class SolanaProvider extends BaseProvider implements ISolanaProvider {
     const data = SolanaProvider.bufferToHex(message);
 
     const res = await this.internalRequest<{ signature: string }>({
-      method: 'signTransaction',
+      method: 'signMessage',
       params: { message: data },
     });
 
