@@ -39,6 +39,19 @@ export class SolanaProvider extends BaseProvider implements ISolanaProvider {
   isONTO: boolean = true;
   isPhantom: Boolean = true;
 
+  static isUTF8(buffer: Buffer) {
+    try {
+      new TextDecoder('utf8', { fatal: true }).decode(buffer);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  static decodeUTF8(buffer: Buffer) {
+      return new TextDecoder('utf8', { fatal: true }).decode(buffer);
+  }
+
   static bufferToHex(buffer: Buffer | Uint8Array | string) {
     return '0x' + Buffer.from(buffer).toString('hex');
   }
@@ -186,10 +199,13 @@ export class SolanaProvider extends BaseProvider implements ISolanaProvider {
     message: Uint8Array,
   ): Promise<{ signature: Uint8Array; publicKey: string | undefined }> {
     const data = SolanaProvider.bufferToHex(message);
+    const buffer = SolanaProvider.messageToBuffer(data)
+
+    const raw = SolanaProvider.isUTF8(buffer) ? SolanaProvider.decodeUTF8(buffer) : data
 
     const res = await this.internalRequest<{ signature: string }>({
       method: 'signMessage',
-      params: { message: data },
+      params: { data, raw },
     });
 
     return {

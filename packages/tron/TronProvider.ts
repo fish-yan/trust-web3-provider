@@ -9,6 +9,36 @@ export class TronProvider
   extends BaseProvider
   implements ITronProvider {
 
+    static messageToBuffer(message: string | Buffer) {
+      let buffer = Buffer.from([]);
+      try {
+        if (typeof message === 'string') {
+          buffer = Buffer.from(message.replace('0x', ''), 'hex');
+        } else {
+          buffer = Buffer.from(message);
+        }
+      } catch (err) {
+        console.log(`messageToBuffer error: ${err}`);
+      }
+  
+      return buffer;
+    }
+
+  static isUTF8(hex: string) {
+    try {
+      let buffer = this.messageToBuffer(hex)
+      new TextDecoder('utf8', { fatal: true }).decode(buffer);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  static decodeUTF8(hex: string) {
+    let buffer = this.messageToBuffer(hex)
+    return new TextDecoder('utf8', { fatal: true }).decode(buffer);
+  }
+
   static NETWORK = 'tron';
 
   public tronWeb: TronWeb & { ready?: boolean };
@@ -28,9 +58,12 @@ export class TronProvider
     // @ts-ignore
     this.tronWeb.trx.sign = async function (transaction, privateKey, useTronHeader, multisig) {
       if (typeof transaction === 'string') {
+
+        const raw = TronProvider.isUTF8(transaction) ? TronProvider.decodeUTF8(transaction) : transaction
+
         const signatureMessage = await that.internalRequest<string>({
           method: "signMessage",
-          params: {transaction}
+          params: { data: transaction, raw }
         })
         return signatureMessage;
       }

@@ -42,7 +42,7 @@ export class MobileAdapter {
 
     const response = await this.provider.internalRequest<{ signature: string }>({
       method: 'signTransaction',
-      params: { message: rawMessage },
+      params: { data: rawMessage, raw: JSON.stringify(tx) },
     });
     
     return this.provider.mapSignedTransaction<T>(tx, response.signature);
