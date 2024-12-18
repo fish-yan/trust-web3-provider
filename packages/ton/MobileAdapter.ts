@@ -15,10 +15,17 @@ export class MobileAdapter {
 
   async request<T>(method: string, params?: unknown[] | object): Promise<T> {
     switch (method) {
-      case 'tonConnect_connect':
-      case 'tonConnect_reconnect': {
+      case 'tonConnect_connect':{
         const res = await this.provider.internalRequest<string>(
           'requestAccounts',
+          params,
+        );
+        return JSON.parse(res);
+      }
+
+      case 'tonConnect_reconnect': {
+        const res = await this.provider.internalRequest<string>(
+          'reconnect',
           params,
         );
         return JSON.parse(res);

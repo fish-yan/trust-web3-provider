@@ -46,7 +46,7 @@ export class EthereumProvider
 
     if (config) {
       if (config.chainId) {
-        this.#chainId = config.chainId;
+        this.setChainId('0x' + parseInt(config.chainId).toString(16));
       }
 
       if (config.rpc || config.rpcUrl) {
