@@ -1,5 +1,5 @@
 export interface I{{name}}ProviderConfig {
-  isTrust?: boolean;
+  isOnto?: boolean;
 }
 
 export default interface I{{name}}Provider {}

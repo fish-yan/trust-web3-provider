@@ -9,5 +9,6 @@ export const allowedPackages = [
   'aptos',
   'ton',
   'neo',
-  'tron'
+  'tron',
+  'sui'
 ];

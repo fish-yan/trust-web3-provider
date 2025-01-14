@@ -7,11 +7,12 @@ import { ISolanaProviderConfig } from '@trustwallet/web3-provider-solana/types/S
 import { IEthereumProviderConfig } from '@trustwallet/web3-provider-ethereum/types/EthereumProvider';
 import { IAptosProviderConfig } from '@trustwallet/web3-provider-aptos/types/AptosProvider';
 import { ITonProviderConfig } from '@trustwallet/web3-provider-ton/types/TonProvider';
-import { DeviceInfo, WalletInfo } from '@trustwallet/web3-provider-ton/dist/types/types/TonBridge';
 import { NeoProvider } from "@trustwallet/web3-provider-neo";
 import { INeoProviderConfig } from '@trustwallet/web3-provider-neo/types/NeoProvider';
 import { TronProvider } from "@trustwallet/web3-provider-tron";
 import { ITronProviderConfig } from '@trustwallet/web3-provider-tron/types/TronProvider';
+import { ISuiProviderConfig } from  '@trustwallet/web3-provider-sui/types/SuiProvider';
+import { SuiProvider } from  '@trustwallet/web3-provider-sui';
 
 
 export interface IWalletConfig {
@@ -21,6 +22,7 @@ export interface IWalletConfig {
   ton?: ITonProviderConfig;
   neo?: INeoProviderConfig;
   tron?: ITronProviderConfig;
+  sui?: ISuiProviderConfig;
 }
 
 window.walletOnto = {}
@@ -54,6 +56,7 @@ function setConfig(config: IWalletConfig) {
     setTonConfig(config.ton)
     setNeoConfig(config.neo)
     setTronConfig(config.tron)
+    setSuiConfig(config.sui)
 
     core.registerProviders(registerProviders.map(provider => {
       provider.sendResponse = core.sendResponse.bind(core);
@@ -167,6 +170,24 @@ function setTronConfig(config?: ITronProviderConfig) {
   window.walletOnto.tron = tron;
 
   registerProviders.push(tron)
+}
+
+function setSuiConfig(config?: ISuiProviderConfig) {
+  const sui = new SuiProvider(config)
+  registerProviders.push(sui)
+  window.walletOnto.sui = sui;
+
+  const suiWallet = new SuiProvider({isOnto: false});
+  registerProviders.push(suiWallet)
+
+  const readOnlyProps = ['chains', 'features', 'version', 'name', 'icon'];
+  for(const prop in sui) {
+    if (!readOnlyProps.includes(prop)) {
+      // @ts-ignore
+        suiWallet[prop] = sui[prop];
+    }
+  }
+  
 }
 
 window.setConfig = setConfig
