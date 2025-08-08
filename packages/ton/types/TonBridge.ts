@@ -3,9 +3,12 @@ enum NETWORK {
   TESTNET = '-3',
 }
 
+type SignDataType = 'text' | 'binary' | 'cell';
+type SignDataFeature = { name: 'SignData'; types: SignDataType[] };
+
 type Feature =
   | { name: 'SendTransaction'; maxMessages: number } // `maxMessages` is maximum number of messages in one `SendTransaction` that the wallet supports
-  | { name: 'SignData' }
+  | SignDataFeature
   | 'SendTransaction';
 
 export type DeviceInfo = {
@@ -23,6 +26,7 @@ export interface WalletInfo {
   image: string;
   tondns?: string;
   about_url: string;
+  universal_url?: string;
   platforms: (
     | 'ios'
     | 'android'

@@ -32,11 +32,12 @@ export class MobileAdapter {
       }
 
       case 'ton_rawSign':
+      case 'tonConnect_signData':
         return this.provider.internalRequest<T>('signMessage', params);
 
       case 'ton_sendTransaction':
       case 'tonConnect_sendTransaction':
-        return this.provider.internalRequest<T>('signTransaction', params);
+        return this.provider.internalRequest<T>('sendTransaction', params);
 
       case 'ton_requestAccounts': {
         const res = await this.provider.internalRequest<string>(

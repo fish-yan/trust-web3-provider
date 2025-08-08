@@ -14,6 +14,9 @@ export class TronProvider
       try {
         if (typeof message === 'string') {
           buffer = Buffer.from(message.replace('0x', ''), 'hex');
+          if (buffer.length == 0) {
+            buffer = Buffer.from(message);
+          }
         } else {
           buffer = Buffer.from(message);
         }

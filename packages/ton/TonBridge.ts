@@ -36,7 +36,7 @@ export class TonBridge implements TonConnectBridge {
     appName: "tonkeeper",
     appVersion: "4.8.2",
     maxProtocolVersion: 2,
-    features: ['SendTransaction', { name: 'SendTransaction', maxMessages: 255 }, { name: 'SignData' }]
+    features: ['SendTransaction', { name: 'SendTransaction', maxMessages: 255 }, { name: 'SignData', types: ["text", "binary", "cell"] }]
   };
   walletInfo?: WalletInfo | undefined = {
     name: "ONTO",
@@ -141,8 +141,15 @@ export class TonBridge implements TonConnectBridge {
         `tonConnect_${message.method}`,
         message.params.map((item) => JSON.parse(item)),
       );
-
-      return { result, id: message.id.toString() };
+      console.log("ton-connect: signData", result);
+      
+      try {
+        const json = JSON.parse(result);
+         console.log("ton-connect: signData: json", json);
+        return { result: json, id: message.id.toString() };
+      } catch  {
+        return { result, id: message.id.toString() };
+      }
     } catch (e) {
       return {
         error: e as WalletResponseError['error'],

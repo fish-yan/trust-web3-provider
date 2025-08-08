@@ -49,6 +49,9 @@ export class SuiProvider
     try {
       if (typeof message === 'string') {
         buffer = Buffer.from(message.replace('0x', ''), 'hex');
+        if (buffer.length == 0) {
+          buffer = Buffer.from(message);
+        }
       } else {
         buffer = Buffer.from(message);
       }
@@ -182,7 +185,7 @@ export class SuiProvider
     const result = await this.internalRequest<SignedTransaction>({
       method: 'signTransaction',
       params: {
-        transactionSerialized: await input.transactionBlock.toJSON()
+        transactionSerialized: await input.transactionBlock.toJSON(),
       },
     });
     return {

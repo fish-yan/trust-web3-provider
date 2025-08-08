@@ -31,7 +31,7 @@ export class MobileAdapter {
   }
 
   static decodeUTF8(buffer: Buffer) {
-      return new TextDecoder('utf8', { fatal: true }).decode(buffer);
+    return new TextDecoder('utf8', { fatal: true }).decode(buffer);
   }
 
   static bufferToHex(buffer: Buffer | string) {
@@ -41,13 +41,19 @@ export class MobileAdapter {
   static messageToBuffer(message: string | Buffer) {
     let buffer = Buffer.from([]);
     try {
-      if (typeof message === 'string') {
-        buffer = Buffer.from(message.replace('0x', ''), 'hex');
+      if (typeof message === 'string' && /^[0-9a-fA-F]+$/.test(message)) {
+        const buf = Buffer.from(message.replace('0x', ''), 'hex');
+        const str = this.decodeUTF8(buf);
+        if (str.length != 0) {
+          buffer = buf
+        } else {
+          buffer = Buffer.from(message);
+        }
       } else {
         buffer = Buffer.from(message);
       }
     } catch (err) {
-      console.log(`messageToBuffer error: ${err}`);
+      buffer = Buffer.from(message);
     }
 
     return buffer;
@@ -75,9 +81,9 @@ export class MobileAdapter {
         });
       case 'eth_requestAccounts':
         return new Promise((resolve, reject) => {
-          this.provider.internalRequest<string>({ method: 'requestAccounts',  params: {}, })
-          .then((address) => resolve([address] as T))
-          .catch((error) => reject(error));
+          this.provider.internalRequest<string>({ method: 'requestAccounts', params: {}, })
+            .then((address) => resolve([address] as T))
+            .catch((error) => reject(error));
         })
       case 'eth_sign':
         return this.ethSign(args.params as [string, string]);
@@ -192,7 +198,7 @@ export class MobileAdapter {
 
     const buffer = MobileAdapter.messageToBuffer(message);
     const data = MobileAdapter.bufferToHex(buffer);
-    const raw = MobileAdapter.isUTF8(buffer) ? MobileAdapter.decodeUTF8(buffer) : message 
+    const raw = MobileAdapter.isUTF8(buffer) ? MobileAdapter.decodeUTF8(buffer) : message
 
     return this.provider.internalRequest<T>({
       method: MobileAdapter.isUTF8(buffer)
