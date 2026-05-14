@@ -30,6 +30,10 @@ import {
   SuiSignAndExecuteTransactionBlockMethod,
   SuiSignAndExecuteTransactionBlockOutput,
 } from '@mysten/wallet-standard';
+import { Transaction } from "@mysten/sui/transactions";
+import { SuiClient, getFullnodeUrl } from '@mysten/sui/client';
+
+const client = new SuiClient({ url: getFullnodeUrl('mainnet') });
 
 export class SuiProvider
   extends BaseProvider
@@ -182,10 +186,15 @@ export class SuiProvider
   }
 
   #signTransactionBlock: SuiSignTransactionBlockMethod = async (input) => {
+    const json = await input.transactionBlock.toJSON();
+    const transaction = Transaction.from(json);
+    transaction.setSender(this.accounts[0].address);
+    const transactionBytes = await transaction.build({ client: client }); 
     const result = await this.internalRequest<SignedTransaction>({
       method: 'signTransaction',
       params: {
-        transactionSerialized: await input.transactionBlock.toJSON(),
+        transactionSerialized: json,
+        transactionBytes: SuiProvider.bufferToHex(transactionBytes)
       },
     });
     return {
@@ -195,21 +204,31 @@ export class SuiProvider
   }
 
   #signTransaction: SuiSignTransactionMethod = async (input) => {
+    const json = await input.transaction.toJSON();
+    const transaction = Transaction.from(json);
+    transaction.setSender(this.accounts[0].address);
+    const transactionBytes = await transaction.build({ client: client }); 
     const result = await this.internalRequest<SignedTransaction>({
       method: 'signTransaction',
       params: {
-        transactionSerialized: await input.transaction.toJSON(),
-        signal: input.signal
+        transactionSerialized: json,
+        signal: input.signal,
+        transactionBytes: SuiProvider.bufferToHex(transactionBytes)
       },
     });
     return result;
   }
 
   #signAndExecuteTransactionBlock: SuiSignAndExecuteTransactionBlockMethod = async (input) => {
+    const json = await input.transactionBlock.toJSON();
+    const transaction = Transaction.from(json);
+    transaction.setSender(this.accounts[0].address);
+    const transactionBytes = await transaction.build({ client: client }); 
     const result = await this.internalRequest<SuiSignAndExecuteTransactionBlockOutput>({
       method: 'sendTransaction',
       params: {
-        transactionSerialized: await input.transactionBlock.toJSON(),
+        transactionSerialized: json,
+        transactionBytes: SuiProvider.bufferToHex(transactionBytes),
         options: {
           showRawEffects: true,
           showRawInput: true,
@@ -220,11 +239,16 @@ export class SuiProvider
   }
 
   #signAndExecuteTransaction: SuiSignAndExecuteTransactionMethod = async (input) => {
+    const json = await input.transaction.toJSON();
+    const transaction = Transaction.from(json);
+    transaction.setSender(this.accounts[0].address);
+    const transactionBytes = await transaction.build({ client: client }); 
     const result = await this.internalRequest<SuiSignAndExecuteTransactionOutput>({
       method: 'sendTransaction',
       params: {
-        transactionSerialized: await input.transaction.toJSON(),
+        transactionSerialized: json,
         signal: input.signal,
+        transactionBytes: SuiProvider.bufferToHex(transactionBytes),
         options: {
           showRawEffects: true,
           showRawInput: true,

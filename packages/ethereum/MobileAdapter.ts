@@ -41,10 +41,9 @@ export class MobileAdapter {
   static messageToBuffer(message: string | Buffer) {
     let buffer = Buffer.from([]);
     try {
-      if (typeof message === 'string' && /^[0-9a-fA-F]+$/.test(message)) {
+      if (typeof message === 'string' && /^(0x)?[0-9a-fA-F]+$/.test(message)) {
         const buf = Buffer.from(message.replace('0x', ''), 'hex');
-        const str = this.decodeUTF8(buf);
-        if (str.length != 0) {
+        if (this.isUTF8(buf)) {
           buffer = buf
         } else {
           buffer = Buffer.from(message);
@@ -86,7 +85,12 @@ export class MobileAdapter {
             .catch((error) => reject(error));
         })
       case 'eth_sign':
-        return this.ethSign(args.params as [string, string]);
+        return Promise.reject(
+        new RPCError(
+          4200,
+          `EthereumProvider does not support calling ${args.method}`,
+        ),
+      );
       case 'personal_sign':
         return this.personalSign(args.params as [string, string]);
       case 'personal_ecRecover':
@@ -108,7 +112,7 @@ export class MobileAdapter {
         );
       case 'eth_sendTransaction':
         return this.provider.internalRequest({
-          method: 'signTransaction',
+          method: 'sendTransaction',
           params: (args.params as object[])[0],
         });
       case 'wallet_watchAsset': {

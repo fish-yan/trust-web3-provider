@@ -124,10 +124,10 @@ export class TonBridge implements TonConnectBridge {
   }
 
   disconnect() {
-    return this.emit({
-      event: 'disconnect',
-      payload: { },
-    });
+    // return this.emit({
+    //   event: 'disconnect',
+    //   payload: { },
+    // });
   }
 
   /**
@@ -141,11 +141,9 @@ export class TonBridge implements TonConnectBridge {
         `tonConnect_${message.method}`,
         message.params.map((item) => JSON.parse(item)),
       );
-      console.log("ton-connect: signData", result);
       
       try {
         const json = JSON.parse(result);
-         console.log("ton-connect: signData: json", json);
         return { result: json, id: message.id.toString() };
       } catch  {
         return { result, id: message.id.toString() };
