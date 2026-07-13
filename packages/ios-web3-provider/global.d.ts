@@ -25,6 +25,7 @@ declare global {
     Vital: INeoProvider;
     tron: ITronProvider;
     tronWeb: TronWeb;
+    tronLink: TronWeb;
     _tw_: any;
     setConfig: (config: IWalletConfig) => void;
   }

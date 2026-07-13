@@ -155,7 +155,7 @@ export class AptosProvider extends BaseProvider implements AptosWallet {
 
   network = async (): Promise<any> => {
     return {
-      name: 'Mainnet',
+      name: 'mainnet',
       chainId: '1',
       url: 'https://fullnode.devnet.aptoslabs.com/v1',
     };

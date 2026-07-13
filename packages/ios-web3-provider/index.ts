@@ -167,6 +167,9 @@ function setTronConfig(config?: ITronProviderConfig) {
   
   window.tron = tron;
   window.tronWeb = tron.tronWeb;
+  if (window.location.href.includes('justlend')) {
+    window.tronLink = tron;
+  }
   window.walletOnto.tron = tron;
 
   registerProviders.push(tron)
